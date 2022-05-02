@@ -39,9 +39,24 @@ namespace LB1
         // обработчик клика на пункт меню открытия файла
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsSavedImage)
+            try
             {
-                if (MessageBox.Show("Текущее изображение не сохранено! Удалить его и продолжить?", "Несохранённые данные", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (!IsSavedImage)
+                {
+                    if (MessageBox.Show("Текущее изображение не сохранено! Удалить его и продолжить?", "Несохранённые данные", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        OpenFileDialog openFileDialog = new OpenFileDialog
+                        {
+                            Filter = "Image files (*.png;*.jpeg;*.jpg;*.bmp)|*.png;*.jpeg;*.jpg;*.bmp"
+                        };
+                        if (openFileDialog.ShowDialog() == true)
+                        {
+                            ImageBox.Source = new BitmapImage(new Uri(openFileDialog.FileName));
+                            UpdateUI();
+                        }
+                    }
+                }
+                else
                 {
                     OpenFileDialog openFileDialog = new OpenFileDialog
                     {
@@ -50,22 +65,14 @@ namespace LB1
                     if (openFileDialog.ShowDialog() == true)
                     {
                         ImageBox.Source = new BitmapImage(new Uri(openFileDialog.FileName));
+                        IsSavedImage = true;
                         UpdateUI();
                     }
                 }
             }
-            else
+            catch (Exception)
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog
-                {
-                    Filter = "Image files (*.png;*.jpeg;*.jpg;*.bmp)|*.png;*.jpeg;*.jpg;*.bmp"
-                };
-                if (openFileDialog.ShowDialog() == true)
-                {
-                    ImageBox.Source = new BitmapImage(new Uri(openFileDialog.FileName));
-                    IsSavedImage = true;
-                    UpdateUI();
-                }
+                MessageBox.Show("Ошибка при открытии изображения: неверный формат файла", "Ошибка файла", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -96,9 +103,21 @@ namespace LB1
         // обработчик перетаскивания файла изображения на окно приложения
         private void ImageBox_Drop(object sender, DragEventArgs e)
         {
-            if (!IsSavedImage)
+            try
             {
-                if (MessageBox.Show("Текущее изображение не сохранено! Удалить его и продолжить?", "Несохранённые данные", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (!IsSavedImage)
+                {
+                    if (MessageBox.Show("Текущее изображение не сохранено! Удалить его и продолжить?", "Несохранённые данные", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                        {
+                            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                            ImageBox.Source = new BitmapImage(new Uri(files[0]));
+                            UpdateUI();
+                        }
+                    }
+                }
+                else
                 {
                     if (e.Data.GetDataPresent(DataFormats.FileDrop))
                     {
@@ -108,14 +127,9 @@ namespace LB1
                     }
                 }
             }
-            else
+            catch(Exception)
             {
-                if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                {
-                    string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                    ImageBox.Source = new BitmapImage(new Uri(files[0]));
-                    UpdateUI();
-                }
+                MessageBox.Show("Ошибка при открытии изображения: неверный формат файла", "Ошибка файла", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -140,35 +154,42 @@ namespace LB1
         // функция для работы с Bitmap'ом напрямую
         private void MakeFilter(Filter filter)
         {
-            // получаем Bitmap текущего изображения
-            Bitmap bmp = GetBitmap((BitmapSource)ImageBox.Source);
+            try
+            {
+                // получаем Bitmap текущего изображения
+                Bitmap bmp = GetBitmap((BitmapSource)ImageBox.Source);
 
-            // блокируем данные Bitmap'а
-            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, bmp.PixelFormat);
+                // блокируем данные Bitmap'а
+                Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+                BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, bmp.PixelFormat);
 
-            // получаем указатель на начало Bitmap'а
-            IntPtr ptr = bmpData.Scan0;
+                // получаем указатель на начало Bitmap'а
+                IntPtr ptr = bmpData.Scan0;
 
-            // объявляем массив для хранения пикселей
-            int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
-            byte[] rgbValues = new byte[bytes];
+                // объявляем массив для хранения пикселей
+                int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+                byte[] rgbValues = new byte[bytes];
 
-            // копируем пиксели в массив
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+                // копируем пиксели в массив
+                System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            // накладываем фильтр
-            rgbValues = filter(rgbValues);
+                // накладываем фильтр
+                rgbValues = filter(rgbValues);
 
-            // копируем значения пикселей обратно в Bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                // копируем значения пикселей обратно в Bitmap
+                System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
 
-            // разблокируем данные Bitmap'а
-            bmp.UnlockBits(bmpData);
+                // разблокируем данные Bitmap'а
+                bmp.UnlockBits(bmpData);
 
-            // обновляем изображение на форме
-            ImageBox.Source = Convert(bmp);
-            IsSavedImage = false;
+                // обновляем изображение на форме
+                ImageBox.Source = Convert(bmp);
+                IsSavedImage = false;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка при наложении фильтра: " + ex.Message, "Ошибка фильтра", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // функция наложения чёрно-белого фильтра
