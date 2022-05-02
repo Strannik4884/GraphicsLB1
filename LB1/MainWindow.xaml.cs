@@ -79,7 +79,24 @@ namespace LB1
         // обработчик клика на пункт меню сохранения файла
         private void SaveFileAs_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "PNG (*.png)|*.png|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp"
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    // получаем Bitmap текущего изображения
+                    Bitmap bmp = GetBitmap((BitmapSource)ImageBox.Source);
+                    bmp.Save(saveFileDialog.FileName, GetImageFormatByFilterIndex(saveFileDialog.FilterIndex));
+                    IsSavedImage = true;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка при сохранении изображения: " + ex.Message, "Ошибка файла", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // обработчик клика на пункт меню закрытия программы
@@ -112,6 +129,11 @@ namespace LB1
                         if (e.Data.GetDataPresent(DataFormats.FileDrop))
                         {
                             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                            // проверяем расширение файла
+                            if (!IsCorrectImageExtension(files[0]))
+                            {
+                                throw new InvalidDataException("Неверный формат файла");
+                            }
                             ImageBox.Source = new BitmapImage(new Uri(files[0]));
                             UpdateUI();
                         }
@@ -122,6 +144,11 @@ namespace LB1
                     if (e.Data.GetDataPresent(DataFormats.FileDrop))
                     {
                         string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                        // проверяем расширение файла
+                        if (!IsCorrectImageExtension(files[0]))
+                        {
+                            throw new InvalidDataException("Неверный формат файла");
+                        }
                         ImageBox.Source = new BitmapImage(new Uri(files[0]));
                         UpdateUI();
                     }
@@ -322,6 +349,34 @@ namespace LB1
             image.EndInit();
 
             return image;
+        }
+
+        // функция для проверки расширения файла изображения
+        private bool IsCorrectImageExtension(string path)
+        {
+            string extension = Path.GetExtension(path).ToLower();
+            if (extension == ".png" || extension == ".jpg" || extension == ".jpeg" || extension == ".bmp")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        // функция для получения формата изображения по выбранному индексу фильтра
+        private ImageFormat GetImageFormatByFilterIndex(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return ImageFormat.Png;
+                case 1:
+                    return ImageFormat.Jpeg;
+                case 2:
+                    return ImageFormat.Bmp;
+                default:
+                    return ImageFormat.Png;
+            }
         }
     }
 }
