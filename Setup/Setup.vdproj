@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_32EA219F625B481CB9D844A4A5DF5D74"
+        "MsmKey" = "8:_E69569E5363241AAAC4F4832C02B8538"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -110,9 +110,9 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_32EA219F625B481CB9D844A4A5DF5D74"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E69569E5363241AAAC4F4832C02B8538"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\..\\icon.ico"
+            "SourcePath" = "8:..\\LB1\\icon.ico"
             "TargetName" = "8:icon.ico"
             "Tag" = "8:"
             "Folder" = "8:_01667E00C5844CFF8FE36591451F4A06"
@@ -187,7 +187,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Graphics LB1"
         "ProductCode" = "8:{CDCECE4A-DD48-42E2-AC60-011602820E63}"
-        "PackageCode" = "8:{9905904B-6386-48F1-ACC0-E54F7C40238C}"
+        "PackageCode" = "8:{74F0B9F0-776E-4CA0-8FCA-67B8B99F19AC}"
         "UpgradeCode" = "8:{878E9B67-2FA7-4AA4-A61C-94A1B6EDE829}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -200,11 +200,11 @@
         "ARPHELPLINK" = "8:"
         "Title" = "8:Graphics LB1 Setup"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Alex Parkhomov"
+        "ARPCONTACT" = "8:Strannik"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:_32EA219F625B481CB9D844A4A5DF5D74"
+        "ARPPRODUCTICON" = "8:_E69569E5363241AAAC4F4832C02B8538"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -318,7 +318,7 @@
             "Target" = "8:_E9E5253459C648FD9552D07D2926A692"
             "Folder" = "8:_580BB5ECA51345F1B9D5B331D8C1433F"
             "WorkingFolder" = "8:_01667E00C5844CFF8FE36591451F4A06"
-            "Icon" = "8:_32EA219F625B481CB9D844A4A5DF5D74"
+            "Icon" = "8:_E69569E5363241AAAC4F4832C02B8538"
             "Feature" = "8:"
             }
         }
