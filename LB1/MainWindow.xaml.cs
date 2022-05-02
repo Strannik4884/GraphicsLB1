@@ -63,6 +63,7 @@ namespace LB1
                 if (openFileDialog.ShowDialog() == true)
                 {
                     ImageBox.Source = new BitmapImage(new Uri(openFileDialog.FileName));
+                    IsSavedImage = true;
                     UpdateUI();
                 }
             }
@@ -77,16 +78,18 @@ namespace LB1
         // обработчик клика на пункт меню закрытия программы
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
+            Close();
+        }
+
+        // обработчик события закрытия приложения
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
             if (!IsSavedImage)
             {
-                if (MessageBox.Show("Текущее изображение не сохранено! Удалить его и продолжить?", "Несохранённые данные", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Текущее изображение не сохранено! Удалить его и продолжить?", "Несохранённые данные", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
-                    Close();
+                    e.Cancel = true;
                 }
-            }
-            else
-            {
-                Close();
             }
         }
 
@@ -119,6 +122,7 @@ namespace LB1
         // функция для обновления элементов пользовательского интерфейса
         private void UpdateUI()
         {
+            IsSavedImage = true;
             if (ImageBox.Source != null)
             {
                 SaveFileAs.IsEnabled = true;

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Лабораторная работа №1" MinHeight="450" MinWidth="800" Height="450" Width="800" WindowStartupLocation="CenterScreen" AllowDrop="True" Drop="ImageBox_Drop">
+        Title="Лабораторная работа №1" MinHeight="450" MinWidth="800" Height="450" Width="800" WindowStartupLocation="CenterScreen" AllowDrop="True" Drop="ImageBox_Drop" Closing="Window_Closing">
     <Grid>
         <Menu Height="25" VerticalAlignment="Top" Background="White">
             <MenuItem Header="Файл">
