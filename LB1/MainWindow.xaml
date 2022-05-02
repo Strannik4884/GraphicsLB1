@@ -8,7 +8,7 @@
     <Grid>
         <Menu Height="25" VerticalAlignment="Top" Background="White">
             <MenuItem Header="Файл">
-                <MenuItem x:Name="NewFile" Header="Новый" Click="NewFile_Click"/>
+                <MenuItem x:Name="NewFile" Header="Очистить" Click="NewFile_Click"/>
                 <MenuItem x:Name="OpenFile" Header="Открыть файл" Click="OpenFile_Click"/>
                 <MenuItem x:Name="SaveFileAs" Header="Сохранить как" Click="SaveFileAs_Click" IsEnabled="False"/>
                 <Separator/>
